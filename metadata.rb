@@ -1,0 +1,7 @@
+name             'nftables'
+maintainer       'YOUR_NAME'
+maintainer_email 'YOUR_EMAIL'
+license          'All rights reserved'
+description      'Installs/Configures nftables'
+long_description 'Installs/Configures nftables'
+version          '0.1.0'
