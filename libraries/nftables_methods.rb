@@ -5,8 +5,8 @@ module NftablesMethods
   def nft_load_rules_from_path(path, template_variables={})
     rules = {}
 
-    ::Dir.chdir(release_path)
-    ::Dir.entries(release_path).each do |f|
+    ::Dir.chdir(path)
+    ::Dir.entries(path).each do |f|
       next unless ::File.file?(f)
 
       if ::File.extname(f) == '.erb'
@@ -28,7 +28,7 @@ module NftablesMethods
       r.local true
       r.variables template_variables
     end.run_action(:create_if_missing)
-    return f
+    f
   end
 
   def nft_flush_rules
