@@ -15,8 +15,11 @@ module NftablesMethods
 
       if !rules.has_key?(f) && ::File.extname(f) == '.rules'
         rules[f] = true
-        nft_load_file(f)
       end
+    end
+
+    rules.keys.sort.each do |f|
+      nft_load_file(f)
     end
   end
 
