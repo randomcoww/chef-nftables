@@ -9,6 +9,7 @@ class Chef
       property :git_branch, String
       property :deploy_path, String
       property :git_repo, String
+      property :template_variables, Hash
     end
   end
 end

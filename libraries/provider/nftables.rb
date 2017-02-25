@@ -24,6 +24,8 @@ class Chef
 
       def deploy_revision(action)
         Chef::Resource::DeployRevision.new(new_resource.name, run_context).tap do |r|
+          template_variables = new_resource.template_variables
+
           r.before_migrate ()
           r.before_restart ()
           r.before_symlink ()
@@ -38,10 +40,7 @@ class Chef
           r.repo new_resource.git_repo
           r.restart_command do
             nft_flush_rules
-            ::Dir.chdir(release_path)
-            ::Dir.entries(release_path).each do |f|
-              nft_load_rules_file(f)
-            end
+            nft_load_rules_from_path(release_path, template_variables)
           end
           r.rollback_on_error true
         end.run_action(action)

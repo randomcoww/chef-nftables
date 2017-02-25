@@ -2,14 +2,41 @@ module NftablesMethods
   include Chef::Mixin::Which
   include Chef::Mixin::ShellOut
 
+  def nft_load_rules_from_path(path, template_variables={})
+    rules = {}
+
+    ::Dir.chdir(release_path)
+    ::Dir.entries(release_path).each do |f|
+      next unless ::File.file?(f)
+
+      if ::File.extname(f) == '.erb'
+        f = nft_resolve_template(f, template_variables)
+      end
+
+      if !rules.has_key?(f) && ::File.extname(f) == '.rules'
+        rules[f] = true
+        nft_load_file(f)
+      end
+    end
+  end
+
+  def nft_resolve_template(t, template_variables={})
+    f = ::File.basename(t, '.erb')
+    Chef::Resource::Template.new(f, run_context).tap do |r|
+      r.source t
+      r.path f
+      r.local true
+      r.variables template_variables
+    end.run_action(:create_if_missing)
+    return f
+  end
+
   def nft_flush_rules
     nft_execute!("flush ruleset")
   end
 
-  def nft_load_rules_file(f)
-    if ::File.file?(f) && f =~ /\.rules$/
-      nft_execute!("-f #{f}")
-    end
+  def nft_load_file(f)
+    nft_execute!("-f #{f}")
   end
 
   def nft_execute!(action)
