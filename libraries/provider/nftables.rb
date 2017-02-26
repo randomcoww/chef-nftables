@@ -40,7 +40,7 @@ class Chef
           r.repo new_resource.git_repo
           r.restart_command do
             nft_flush_rules
-            nft_load_rules_from_path(release_path, template_variables)
+            nft_load_rules_from_path(template_variables)
           end
           r.rollback_on_error true
         end.run_action(action)
