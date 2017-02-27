@@ -3,7 +3,6 @@ module NftablesMethods
   include Chef::Mixin::ShellOut
 
   def nft_load_rules_from_path(template_variables)
-    template_variables['release_path'] = release_path
     rules = {}
 
     ::Dir.chdir(release_path)
