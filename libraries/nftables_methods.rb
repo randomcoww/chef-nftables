@@ -18,10 +18,14 @@ module NftablesMethods
       end
     end
 
+    nft_flush_rules
+
     rules.keys.sort.each do |f|
       nft_load_file(f)
     end
   end
+
+  private
 
   def nft_resolve_template(t, template_variables)
     f = ::File.basename(t, '.erb')
