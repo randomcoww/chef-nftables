@@ -9,6 +9,9 @@ class Chef
       property :deploy_path, String
       property :git_repo, String
       property :git_branch, String
+
+      property :keystore_data_bag, String
+      property :keystore_data_bag_item, String
       property :template_variables, Hash
     end
   end
