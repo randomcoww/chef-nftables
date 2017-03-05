@@ -24,18 +24,9 @@ class Chef
 
       private
 
-      def keystore
-        @keystore ||= Dbag::Keystore.new(
-          new_resource.keystore_data_bag,
-          new_resource.keystore_data_bag_item
-        ).data_bag
-      rescue
-        {}
-      end
-
       def deploy_revision(action)
         Chef::Resource::DeployRevision.new(new_resource.name, run_context).tap do |r|
-          template_variables = keystore.merge(new_resource.template_variables)
+          template_variables = new_resource.template_variables
 
           r.before_migrate ()
           r.before_restart ()
