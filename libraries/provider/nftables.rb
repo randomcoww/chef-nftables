@@ -1,8 +1,6 @@
 class Chef
   class Provider
     class Nftables < Chef::Provider
-      include Dbag
-
       provides :nftables, os: "linux"
 
       def load_current_resource
