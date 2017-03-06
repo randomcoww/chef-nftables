@@ -39,6 +39,7 @@ class ChefNftables
           r.repo new_resource.git_repo
           r.restart_command do
             parser = ChefNftables::Provider::Rules::NftablesRules.new(
+              run_context,
               release_path,
               template_variables
             )
