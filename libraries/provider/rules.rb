@@ -5,7 +5,7 @@ class ChefNftables
       use_inline_resources
 
       def load_current_resource
-        @current_resource = Chef::Resource::Nftables.new(new_resource.name)
+        @current_resource = ChefNftables::Resource::Rules.new(new_resource.name)
         current_resource
       end
 
