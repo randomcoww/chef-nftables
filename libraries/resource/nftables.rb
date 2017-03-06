@@ -1,7 +1,7 @@
-class Chef
+class ChefNftables
   class Resource
-    class Nftables < Chef::Resource
-      resource_name :nftables
+    class Rules < Chef::Resource
+      resource_name :nftables_rules
 
       default_action :deploy
       allowed_actions :deploy, :rollback

@@ -1,7 +1,8 @@
-class Chef
+class ChefNftables
   class Provider
-    class Nftables < Chef::Provider
-      provides :nftables, os: "linux"
+    class Rules < Chef::Provider
+      provides :nftables_rules, os: "linux"
+      use_inline_resources
 
       def load_current_resource
         @current_resource = Chef::Resource::Nftables.new(new_resource.name)
@@ -9,21 +10,17 @@ class Chef
       end
 
       def action_deploy
-        converge_by("Deploy nftables: #{new_resource.name}") do
-          deploy_revision(:deploy)
-        end
+        deploy_revision.run_action(:deploy)
       end
 
       def action_rollback
-        converge_by("Rollback nftables: #{new_resource.name}") do
-          deploy_revision(:rollback)
-        end
+        deploy_revision.run_action(:rollback)
       end
 
       private
 
-      def deploy_revision(action)
-        Chef::Resource::DeployRevision.new(new_resource.name, run_context).tap do |r|
+      def deploy_revision
+        @deploy_revision ||= Chef::Resource::DeployRevision.new(new_resource.name, run_context).tap do |r|
           template_variables = new_resource.template_variables
 
           r.before_migrate ()
@@ -39,10 +36,11 @@ class Chef
           r.purge_before_symlink ([])
           r.repo new_resource.git_repo
           r.restart_command do
-            nft_load_rules_from_path(template_variables)
+            parser = NftablesRules.new(template_variables)
+            parser.load_rules_from_release_path
           end
           r.rollback_on_error true
-        end.run_action(action)
+        end
       end
     end
   end

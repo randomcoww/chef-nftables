@@ -1,3 +1,3 @@
 class Chef::Provider::Deploy::Revision
-  include NftablesMethods
+  include Nftables
 end
