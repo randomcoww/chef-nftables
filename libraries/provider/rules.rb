@@ -1,6 +1,8 @@
 class ChefNftables
   class Provider
     class Rules < Chef::Provider
+      include Nftables
+
       provides :nftables_rules, os: "linux"
       use_inline_resources
 
@@ -36,7 +38,7 @@ class ChefNftables
           r.purge_before_symlink ([])
           r.repo new_resource.git_repo
           r.restart_command do
-            parser = NftablesRules.new(template_variables)
+            parser = ChefNftables::Provider::Rules::NftablesRules.new(template_variables)
             parser.load_rules_from_release_path
           end
           r.rollback_on_error true
