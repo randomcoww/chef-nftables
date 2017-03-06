@@ -3,9 +3,10 @@ module Nftables
     include Chef::Mixin::Which
     include Chef::Mixin::ShellOut
 
-    attr_reader :template_variables
+    attr_reader :template_variables, :release_path
 
-    def initialize(template_variables)
+    def initialize(release_path, template_variables)
+      @release_path = release_path
       @template_variables = template_variables
     end
 
