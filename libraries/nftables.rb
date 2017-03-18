@@ -29,6 +29,7 @@ module Nftables
 
       service = nftables_service(rules.keys.sort)
       service.run_action(:create)
+      service.run_action(:enable)
       service.run_action(:restart)
     end
 
