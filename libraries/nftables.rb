@@ -60,6 +60,7 @@ module Nftables
             "Type" => "oneshot",
             "ExecStartPre" => "-#{nft_path} flush ruleset",
             "ExecStart" => rules.map { |e| "#{nft_path} -f #{e}" },
+            "ExecStop" => "#{nft_path} flush ruleset",
             "RemainAfterExit" => "yes"
           },
           "Install" => {
