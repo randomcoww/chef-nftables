@@ -27,11 +27,9 @@ module Nftables
         end
       end
 
-      nft_flush_rules
-
-      rules.keys.sort.each do |f|
-        nft_load_file(f)
-      end
+      service = nftables_service(rules.keys.sort)
+      service.run_action(:create)
+      service.run_action(:restart)
     end
 
     private
@@ -47,18 +45,25 @@ module Nftables
       f
     end
 
-    def nft_flush_rules
-      nft_execute!("flush ruleset")
-    end
-
-    def nft_load_file(f)
-      nft_execute!("-f #{f}")
-    end
-
-    def nft_execute!(action)
-      command = "#{nft_path} #{action}"
-      Chef::Log.info(command)
-      shell_out!(command)
+    def nftables_service(rules)
+      Chef::Resource::SystemdUnit.new('nftables', run_context).tap do |r|
+        r.enabled true
+        r.content ({
+          "Unit" => {
+            "Wants" => "network-pre.target",
+            "Before" => "network-pre.target"
+          },
+          "Service" => {
+            "Type" => "oneshot",
+            "ExecStart" => rules.map { |e| "#{nft_path} -f #{e}" },
+            "ExecStop" => "#{nft_path} flush ruleset",
+            "RemainAfterExit" => "yes"
+          },
+          "Install" => {
+            "WantedBy" => "multi-user.target"
+          }
+        })
+      end
     end
 
     def nft_path
