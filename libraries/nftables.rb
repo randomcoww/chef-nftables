@@ -46,17 +46,19 @@ module Nftables
     end
 
     def nftables_service(rules)
-      Chef::Resource::SystemdUnit.new('nftables', run_context).tap do |r|
+      Chef::Resource::SystemdUnit.new('nftables.service', run_context).tap do |r|
         r.enabled true
         r.content ({
           "Unit" => {
+            "Description" => "Netfilter Tables",
             "Wants" => "network-pre.target",
             "Before" => "network-pre.target"
           },
           "Service" => {
+            "WorkingDirectory" => release_path,
             "Type" => "oneshot",
+            "ExecStartPre" => "-#{nft_path} flush ruleset",
             "ExecStart" => rules.map { |e| "#{nft_path} -f #{e}" },
-            "ExecStop" => "#{nft_path} flush ruleset",
             "RemainAfterExit" => "yes"
           },
           "Install" => {
