@@ -1,9 +1,9 @@
 class ChefNftables
   class Provider
-    class Rules < Chef::Provider
+    class GitRules < Chef::Provider
       include Nftables
 
-      provides :nftables_rules, os: "linux"
+      provides :nftables_git_rules, os: "linux"
       use_inline_resources
 
       def load_current_resource

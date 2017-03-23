@@ -1,7 +1,7 @@
 class ChefNftables
   class Resource
-    class Rules < Chef::Resource
-      resource_name :nftables_rules
+    class GitRules < Chef::Resource
+      resource_name :nftables_git_rules
 
       default_action :deploy
       allowed_actions :deploy, :rollback
