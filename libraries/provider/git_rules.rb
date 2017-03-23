@@ -38,7 +38,7 @@ class ChefNftables
           r.purge_before_symlink ([])
           r.repo new_resource.git_repo
           r.restart_command do
-            parser = ChefNftables::Provider::Rules::NftablesRules.new(
+            parser = ChefNftables::Provider::GitRules::NftablesRules.new(
               run_context,
               release_path,
               template_variables
